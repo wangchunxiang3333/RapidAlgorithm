@@ -1,0 +1,2 @@
+# RapidAlgorithm
+custom rapid function 
