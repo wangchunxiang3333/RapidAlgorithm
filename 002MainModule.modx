@@ -1,0 +1,51 @@
+MODULE MainModule
+    !!!Job_001:WP13H!!!
+    !!!Job_002:WP11H!!!
+    !!!Job_003:WP15NG!!!
+    PROC main()
+        Initial;
+        WHILE TRUE DO
+            Apply_JobCode;
+            !Call Job Program
+            TPErase;
+            P_TPWrite CDate()+CTime();
+            
+            LoadJobModule n_JobCode;
+            P_TPWrite strJobName + " is Starting...";
+            %strJobName%;
+            P_TPWrite strJobName + " is Completed";
+            UnloadJobModule n_JobCode;
+
+            Reply_JobCode 0;
+            Reply_ProgCode 0;
+            Reply_StepCode 0;
+        ENDWHILE
+    ENDPROC
+
+    PROC Apply_JobCode()
+        !
+        n_ProgCode:=n_JobCode;
+    ENDPROC
+
+    PROC Apply_ProgCode()
+        !
+    ENDPROC
+
+    PROC Reply_JobCode(num temp_num)
+        !
+    ENDPROC
+
+    PROC Reply_ProgCode(num temp_num)
+        !
+    ENDPROC
+
+    PROC Reply_StepCode(num temp_num)
+        !
+    ENDPROC
+
+    PROC Initial()
+        !
+    ENDPROC
+
+
+ENDMODULE

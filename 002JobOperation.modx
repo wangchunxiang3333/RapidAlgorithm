@@ -1,0 +1,60 @@
+MODULE JobOperation
+    VAR clock clkLoadModule;
+    CONST string strPathJobs:="HOME/JobModules/";
+    PERS string strJobModuleFullPath:="HOME/JobModules/Module012.mod";
+    PERS string strJobModuleName:="Module012";
+    PERS string strJobName:="Job_012";
+    PERS num nLoadTime:=3.855;
+    PERS dnum dnProgMemoryDelta:=915160;
+
+    PROC LoadJobModule(num job)
+        !
+        VAR dnum pgmfree_before;
+        VAR dnum pgmfree_after;
+        pgmfree_before:=ProgMemFree();
+        ClkReset clkLoadModule;
+        ClkStart clkLoadModule;
+        strJobModuleName:="Module"+NumToStr3(job);
+        strJobModuleFullPath:=strPathJobs+strJobModuleName+".mod";
+        IF NOT ModExist(strJobModuleName) THEN
+            Load\Dynamic,strJobModuleFullPath;
+        ENDIF
+        strJobName:="Job_"+NumToStr3(job);
+        ClkStop clkLoadModule;
+        nLoadTime:=ClkRead(clkLoadModule);
+        pgmfree_after:=ProgMemFree();
+        dnProgMemoryDelta:=pgmfree_before-pgmfree_after;
+        TPWrite strJobModuleName+".mod loading time is : "+ValToStr(nLoadTime)+" s";
+        TPWrite strJobModuleName+".mod prog memory is : "+ValToStr(dnProgMemoryDelta)+" bytes="+ValToStr(pgmfree_before)+"-"+ValToStr(pgmfree_after);
+        !
+    ENDPROC
+
+    PROC UnloadJobModule(num job)
+        !
+        strJobModuleName:="Module"+NumToStr3(job);
+        IF ModExist(strJobModuleName) THEN
+            Erasemodule strJobModuleName;
+            TPWrite strJobModuleName+" is unloaded.";
+        ENDIF
+        !
+    ENDPROC
+    
+    FUNC string NumToStr3(num temp_number)
+        var string temp_string:="";
+        IF temp_number>0 AND temp_number<1000 THEN
+            IF temp_number<10 THEN
+                temp_string:="00"+NumToStr(temp_number,0);
+            ENDIF
+
+            IF temp_number>=10 AND temp_number<100 THEN
+                temp_string:="0"+NumToStr(temp_number,0);
+            ENDIF
+
+            IF temp_number>=100 AND temp_number<1000 THEN
+                temp_string:=NumToStr(temp_number,0);
+            ENDIF
+            RETURN temp_string;
+        ENDIF
+    ENDFUNC
+
+ENDMODULE
